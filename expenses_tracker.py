@@ -27,15 +27,18 @@ scope = [
 
 google_creds_json = os.getenv("GOOGLE_CREDENTIALS")
 
-if not google_creds_json:
-    raise Exception("GOOGLE_CREDENTIALS env variable not found")
+if google_creds_json:
+    creds_dict = json.loads(google_creds_json)
 
-creds_dict = json.loads(google_creds_json)
-
-creds = ServiceAccountCredentials.from_json_keyfile_dict(
-    creds_dict,
-    scope
-)
+    creds = ServiceAccountCredentials.from_json_keyfile_dict(
+        creds_dict,
+        scope
+    )
+else:
+    creds = ServiceAccountCredentials.from_json_keyfile_name(
+        'credentials.json',
+        scope
+    )
 
 client = gspread.authorize(creds)
 
